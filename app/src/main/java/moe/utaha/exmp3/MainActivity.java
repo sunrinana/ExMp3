@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,16 +25,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         m_Adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1);
         listView = (ListView) findViewById(R.id.list_item);
-
         listView.setAdapter(m_Adapter);
         Uri uri = Uri.parse("android.resource://com.cpt.sample/raw/");
         Log.e("asdf --------------",uri.toString());
-        //for (String i : list )
-        //{
-        //    m_Adapter.add(i);
-        //}
-    }
+        for (String i : list )
+        {
+            m_Adapter.add(i);
+        }
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+    }
+    /*
     public void getMp3list(){
         Uri uri = Uri.parse("android.resource://com.cpt.sample/raw/");
         list = new ArrayList<String>();
@@ -48,5 +56,5 @@ public class MainActivity extends AppCompatActivity {
         {
             Toast.makeText(getApplicationContext(),"file error",Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 }

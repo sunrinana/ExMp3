@@ -6,13 +6,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.TextView;
+
+import java.io.IOException;
 
 public class player extends AppCompatActivity implements View.OnClickListener{
     Button btn_pre,btn_play,btn_next;
     SeekBar seekBar;
     MediaPlayer mediaPlayer;
-    int id;
+    TextView txt_title,txt_time;
+    int id,playbackPos = 0;
+    boolean isPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +33,41 @@ public class player extends AppCompatActivity implements View.OnClickListener{
         btn_next.setOnClickListener(this);
         btn_play.setOnClickListener(this);
 
+        txt_title = (TextView) findViewById(R.id.txt_title);
+        txt_time = (TextView) findViewById(R.id.txt_time);
+
         id = R.raw.asdf;
-        mediaPlayer = MediaPlayer.create(this,id);
+
+        try {
+            playMusic();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        seekBar.setVisibility(ProgressBar.VISIBLE);
+        seekBar.setMax(mediaPlayer.getDuration());
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser) {
+                    mediaPlayer.seekTo(progress);
+                }
+                int m = progress / 60000;
+                int s = (progress % 60000) / 1000;
+                String strTime = String.format("%02d:%02d", m, s);
+                txt_time.setText(strTime);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @Override
@@ -38,9 +77,50 @@ public class player extends AppCompatActivity implements View.OnClickListener{
             case R.id.btn_pre:
                 break;
             case R.id.btn_play:
+                if (isPlay) //while playing media
+                {
+                    mediaPlayer.pause();
+                    playbackPos = mediaPlayer.getCurrentPosition();
+                    isPlay = false;
+                }else{
+                    mediaPlayer.start();
+                    mediaPlayer.seekTo(playbackPos);
+                    isPlay = true;
+                }
                 break;
             case R.id.btn_next:
                 break;
         }
     }
+
+    private void playMusic() throws IOException {
+        stopMedia();
+
+        isPlay = true;
+        mediaPlayer = MediaPlayer.create(this,id);
+        //mediaPlayer.setDataSource('');
+        mediaPlayer.prepare();
+        mediaPlayer.start();
+    }
+
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        stopMedia();
+    }
+
+    private void stopMedia()
+    {
+        if (mediaPlayer != null)
+        {
+            try {
+                mediaPlayer.release();
+                isPlay = false;
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

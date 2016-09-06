@@ -7,11 +7,17 @@
     tools:context="moe.utaha.exmp3.player">
     <TextView
         android:textAlignment="center"
-        android:text="asdf"
         android:id="@+id/txt_title"
         android:textSize="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <TextView
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:id="@+id/txt_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
     <SeekBar
         android:id="@+id/player_seekbar"
         android:layout_width="match_parent"
@@ -22,16 +28,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <Button
+            android:text="pre"
             android:id="@+id/btn_pre"
             android:background="#ffffff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <Button
+            android:text="play"
             android:id="@+id/btn_play"
             android:background="#ffffff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <Button
+            android:text="next"
             android:id="@+id/btn_next"
             android:background="#ffffff"
             android:layout_width="wrap_content"
