@@ -1,5 +1,6 @@
 package moe.utaha.exmp3;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,17 +27,18 @@ public class MainActivity extends AppCompatActivity {
         m_Adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1);
         listView = (ListView) findViewById(R.id.list_item);
         listView.setAdapter(m_Adapter);
-        Uri uri = Uri.parse("android.resource://com.cpt.sample/raw/");
-        Log.e("asdf --------------",uri.toString());
-        for (String i : list )
+        //Uri uri = Uri.parse("android.resource://com.cpt.sample/raw/");
+        //Log.e("asdf --------------",uri.toString());
+        /*for (String i : list )
         {
             m_Adapter.add(i);
-        }
-
+        }*/
+        m_Adapter.add("asdf");
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(MainActivity.this,player.class);
+                startActivity(intent);
             }
         });
     }

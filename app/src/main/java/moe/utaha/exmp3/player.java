@@ -2,8 +2,11 @@ package moe.utaha.exmp3;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -40,10 +43,12 @@ public class player extends AppCompatActivity implements View.OnClickListener{
 
         try {
             playMusic();
+            Thread();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        seekBar = (SeekBar) findViewById(R.id.player_seekbar);
         seekBar.setVisibility(ProgressBar.VISIBLE);
         seekBar.setMax(mediaPlayer.getDuration());
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -85,6 +90,7 @@ public class player extends AppCompatActivity implements View.OnClickListener{
                 }else{
                     mediaPlayer.start();
                     mediaPlayer.seekTo(playbackPos);
+                    Thread();
                     isPlay = true;
                 }
                 break;
@@ -95,14 +101,12 @@ public class player extends AppCompatActivity implements View.OnClickListener{
 
     private void playMusic() throws IOException {
         stopMedia();
-
         isPlay = true;
-        mediaPlayer = MediaPlayer.create(this,id);
-        //mediaPlayer.setDataSource('');
-        mediaPlayer.prepare();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(),id);
         mediaPlayer.start();
     }
 
+    @Override
     protected void onDestroy()
     {
         super.onDestroy();
@@ -122,5 +126,39 @@ public class player extends AppCompatActivity implements View.OnClickListener{
             }
         }
     }
+    public void Thread(){
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg){
+                int progress = mediaPlayer.getCurrentPosition();
+                int m = progress / 60000;
+                int s = (progress % 60000) / 1000;
 
+                String strTime = String.format("%02d:%02d", m, s);
+                Log.e("time-----------",strTime+progress);
+                txt_time.setText(strTime);
+                seekBar.setProgress(mediaPlayer.getCurrentPosition());
+            }
+        };
+
+        Runnable task = new Runnable() {
+            public void run() {
+                while (mediaPlayer.isPlaying())
+                {
+                    try {
+                        Thread.sleep(1000);
+                    }catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    if (isPlay)
+                    {
+                        handler.sendEmptyMessage(1);
+                    }
+                }
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
+    }
 }
