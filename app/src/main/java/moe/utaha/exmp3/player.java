@@ -51,6 +51,7 @@ public class player extends AppCompatActivity implements View.OnClickListener{
         seekBar = (SeekBar) findViewById(R.id.player_seekbar);
         seekBar.setVisibility(ProgressBar.VISIBLE);
         seekBar.setMax(mediaPlayer.getDuration());
+        Log.e("media duration","-----------"+mediaPlayer.getDuration());
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
